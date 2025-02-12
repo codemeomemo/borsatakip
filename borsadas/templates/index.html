@@ -3,69 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Borsa Takip Sistemi</title>
+  <title>Borsadaş - Piyasadan Bir Arkadaş</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #ffffff;
-      color: #333;
+      font-family: 'Poppins', sans-serif;
+      margin: 60px;
+      background-color: #fffeff;
+      color: #2d2631;
     }
-    h1 {
+
+    /* Hamburger buton stil ayarları */
+    .hamburger {
+      position: fixed;      /* Sabit konumda tutar */
+      top: 20px;            /* Üstten 20px boşluk */
+      left: 20px;           /* Soldan 20px boşluk */
+      cursor: pointer;      /* İmleç tıklanabilir olduğunu gösterir */
+      z-index: 1000;        /* Menü ve diğer içeriklerin üzerinde olsun */
+    }
+    .hamburger .bar {
+      width: 30px;
+      height: 4px;
+      background-color: #2d2631;
+      margin: 6px 0;
+      transition: 0.4s;
+    }
+    /* Simgeler için ayrı konteyner */
+    .icons-container {
+      position: fixed;
+      /* Hamburger butonunun hemen altında konumlandırma */
+      top: 70px;  
+      left: 13px;
+      display: none;  /* Başlangıçta gizli */
+      flex-direction: column;
+      background-color: #fffdea;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      z-index: 999;
+    }
+    /* Aktif olduğunda (görünür) */ 
+    .icons-container.active {
+      display: flex;
+    }
+    .icons-container a {
+      color: #333;
+      font-size: 20px;
+      margin: 5px 0;
       text-align: center;
     }
+    .icons-container a:hover {
+      background-color: #ddd;
+      border-radius: 4px;
+    }
+
+    /* Genel Sayfa Stilleri */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container img {
+      max-width: 100%;
+      height: auto;
+      width: 750px;
+    }
+
+    .logo-container p {
+      font-size: 24px;
+      color: #2d2631;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
     .buttons {
       text-align: center;
       margin-bottom: 10px;
     }
-    .portfolio-table {
-      width: 80%;
-      max-width: 900px;
-      border-collapse: collapse;
-      margin: 25px auto;
-      background-color: #ffffff;
+
+    .buttons button {
+      background-color: #2d2631;
+      color: white;
+      font-size: 14px;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 500;
     }
-    .portfolio-table th,
-    .portfolio-table td {
-      padding: 16px;
+
+    .buttons button:hover {
+      background-color: #00B38A;
+    }
+
+    .buttons input {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+
+    .portfolio-table {
+      width: 90%;
+      max-width: 1000px;
+      border-collapse: collapse;
+      margin: 20px auto;
+      background-color: #fffeff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .portfolio-table th, .portfolio-table td {
+      padding: 14px;
       text-align: left;
-      border-bottom: 1px solid #d5e5eb;
+      border-bottom: 1px solid #e0e0e0;
       position: relative;
     }
+
     .portfolio-table th {
-      background-color: #f9f9f9;
+      background-color: #2d2631;
+      color: white; 
+      font-weight: 600;
     }
+
+    .portfolio-table tr:hover {
+      background-color: #fffdea;
+      transition: 0.3s;
+    }
+
     .logo-cell img {
       width: 30px;
       height: 30px;
+      margin-top: 4px;
       border-radius: 50%;
     }
+
     .change-positive {
       color: #00B38A;
+      font-weight: 600;
     }
+
     .change-negative {
       color: #EA324C;
+      font-weight: 600;
     }
+
+    .change-notr {
+      color: #505050;
+      font-weight: 600;
+    }
+
     .delete-button {
       cursor: pointer;
-      font-size: 40px;
+      font-size: 30px;
       color: #f44336;
       position: absolute;
-      left: -30px;
+      left: 60px;
       top: 50%;
       transform: translateY(-50%);
       display: none;
     }
+
     .delete-button:hover {
       color: #d32f2f;
     }
+
     .drag-handle {
       cursor: grab;
       text-align: center;
       font-size: 20px;
       color: #aaa;
       position: absolute;
-      right: -30px;
+      right: 25px;
       top: 50%;
       transform: translateY(-50%);
       display: none;
@@ -77,29 +192,80 @@
       position: relative;
     }
     .dragging {
-      background-color: #f0f0f0;
+      background-color: #2d2631;
       opacity: 0.1;
     }
+
     @media (max-width: 768px) {
-      .portfolio-table th,
-      .portfolio-table td {
+      
+      .navbar ul {
+    display: none;
+    flex-direction: column;
+    width: 50%;
+    background-color: #2d2631;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    padding: 10px;
+  }
+
+  .navbar ul.active {
+    display: flex;
+    position: absolute;
+  }
+
+  .menu-toggle div{
+    width: 35px;
+  height: 5px;
+  background-color: #2d2631;
+  margin: 5px 0;
+  transition: 0.3s;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+      .portfolio-table th, .portfolio-table td {
         font-size: 14px;
         padding: 8px;
       }
       .delete-button {
-        left: -30px;
+        left: 38px;
+      }
+      .drag-handle{
+        right: 6px;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Borsa Takip Sistemi</h1>
+
+  <!-- Hamburger Toggle Buton -->
+  <div class="hamburger" id="hamburger">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  
+  <!-- Simgeler için ayrı konteyner -->
+  <div class="icons-container" id="iconsContainer">
+    <a href="#"><i class="fa-solid fa-house"></i></a>
+    <a href="#"><i class="fa-solid fa-info-circle"></i></a>
+    <a href="#"><i class="fa-solid fa-briefcase"></i></a>
+    <a href="#"><i class="fa-solid fa-envelope"></i></a>
+  </div>
+
+  <div class="logo-container">
+    <img src="static/borsadaslogo.png" alt="Borsadaş Logo">
+    <p>Piyasadan Bir Arkadaş</p>
+  </div>
 
   <div class="buttons">
     <button id="editModeButton" onclick="toggleEditMode()">Düzenle</button>
   </div>
 
-  <div>
+  <div class="buttons">
     <input type="text" id="manualStockInput" placeholder="Hisse Kodu (Ör: THYAO)" />
     <button onclick="addManualStock()">Ekle</button>
   </div>
@@ -108,10 +274,11 @@
     <thead>
       <tr>
         <th>Logo</th>
-        <th>Kod</th>
-        <th>Şirket İsmi</th>
+        <th>Hisse</th>
         <th>Fiyat</th>
         <th>Değişim</th>
+        <th>Hacim(TL)</th>
+        <th>Hacim(Lot)</th>
       </tr>
     </thead>
     <tbody id="portfolioBody">
@@ -123,21 +290,36 @@
     const STORAGE_KEY = "addedStocks";
     let editMode = false;
     let draggedRow = null;
+    const hamburger = document.getElementById('hamburger');
+    const iconsContainer = document.getElementById('iconsContainer');
+    
+    hamburger.addEventListener('click', function() {
+    iconsContainer.classList.toggle('active');
+    });
 
     function toggleEditMode() {
-      editMode = !editMode;
-      document.querySelectorAll(".delete-button").forEach(btn => {
+    editMode = !editMode;
+
+    document.querySelectorAll(".delete-button").forEach(btn => {
         btn.style.display = editMode ? "inline-block" : "none";
-      });
-      document.querySelectorAll(".drag-handle").forEach(handle => {
+    });
+    document.querySelectorAll(".drag-handle").forEach(handle => {
         handle.style.display = editMode ? "inline-block" : "none";
-      });
-      // Edit modunda tüm satırlara draggable özelliği veriyoruz
-      document.querySelectorAll("#portfolioBody tr").forEach(row => {
+    });
+
+    // Edit modunda tüm satırları draggable yap
+    document.querySelectorAll("#portfolioBody tr").forEach(row => {
         row.draggable = editMode;
-      });
-      document.getElementById("editModeButton").textContent = editMode ? "Düzenlemeyi Kapat" : "Düzenle";
+    });
+
+    // Edit modu kapandığında sıralamayı kaydet
+    if (!editMode) {
+        saveNewOrder();
     }
+
+    document.getElementById("editModeButton").textContent = editMode ? "Düzenlemeyi Kapat" : "Düzenle";
+}
+
 
     function loadStocks() {
       const storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -148,75 +330,121 @@
       });
     }
 
-    function addStockToTable(stock) {
-      const tableBody = document.getElementById("portfolioBody");
-      const row = document.createElement("tr");
-      row.className = "row-container";
-      row.draggable = editMode;
+    const STORAGE_PREV_KEY = "previousStockRates"; // Önceki değişim değerlerini saklayacağımız key
 
-      // Drag olaylarını ekliyoruz (artık satırın herhangi bir yerinden sürüklenebilir)
-      row.addEventListener("dragstart", dragStartHandler);
-      row.addEventListener("dragover", dragOverHandler);
-      row.addEventListener("dragend", dragEndHandler);
+function addStockToTable(stock) {
+    const tableBody = document.getElementById("portfolioBody");
+    const row = document.createElement("tr");
+    row.className = "row-container";
+    row.draggable = editMode;
 
-      // Logo hücresi
-      const logoCell = document.createElement("td");
-      logoCell.className = "logo-cell";
-      const logoImg = document.createElement("img");
-      logoImg.src = stock.icon || "https://via.placeholder.com/30";
-      logoImg.alt = stock.code;
-      logoCell.appendChild(logoImg);
-      row.appendChild(logoCell);
+    // Drag olaylarını ekliyoruz
+    row.addEventListener("dragstart", dragStartHandler);
+    row.addEventListener("dragover", dragOverHandler);
+    row.addEventListener("dragend", dragEndHandler);
 
-      // Kod hücresi
-      const codeCell = document.createElement("td");
-      codeCell.textContent = stock.code;
-      row.appendChild(codeCell);
+    // Logo hücresi
+    const logoCell = document.createElement("td");
+    logoCell.className = "logo-cell";
+    const logoImg = document.createElement("img");
+    logoImg.src = stock.icon || "https://via.placeholder.com/30";
+    logoImg.alt = stock.hisse;
+    logoCell.appendChild(logoImg);
+    row.appendChild(logoCell);
 
-      // Şirket İsmi hücresi
-      const nameCell = document.createElement("td");
-      nameCell.textContent = stock.text || "-";
-      row.appendChild(nameCell);
+    // Kod hücresi
+    const codeCell = document.createElement("td");
+    codeCell.textContent = stock.code;
+    row.appendChild(codeCell);
 
-      // Fiyat hücresi
-      const priceCell = document.createElement("td");
-      priceCell.textContent = `${stock.lastprice} ₺`;
-      row.appendChild(priceCell);
+    // Fiyat hücresi
+    const priceCell = document.createElement("td");
+    priceCell.textContent = `${stock.lastprice} ₺`;
+    row.appendChild(priceCell);
 
-      // Değişim hücresi
-      const changeCell = document.createElement("td");
-      changeCell.textContent = `${stock.rate}%`;
-      changeCell.className = stock.rate >= 0 ? "change-positive" : "change-negative";
-      row.appendChild(changeCell);
+    // **Önceki değişim verisini localStorage'dan al**
+    let previousRates = JSON.parse(localStorage.getItem(STORAGE_PREV_KEY)) || {}; 
+    let previousRate = previousRates[stock.code] ? parseFloat(previousRates[stock.code].replace(",", ".")) : null;
+    
+    // **Yeni değişim değerini al**
+    let currentRate = parseFloat(stock.rate.replace(",", "."));
 
-      // Silme Butonu (yalnızca edit modunda görünür)
-      const deleteButton = document.createElement("span");
-      deleteButton.textContent = "×";
-      deleteButton.className = "delete-button";
-      deleteButton.style.display = editMode ? "inline-block" : "none";
-      // Delete butonuna tıklanınca tıklamanın sürüklemeye karışmaması için event propagation'ı engelliyoruz
-      deleteButton.addEventListener("click", function(e) {
+    // **Değişim hücresini oluştur**
+    const changeCell = document.createElement("td");
+    changeCell.className = currentRate > 0 ? "change-positive" : currentRate < 0 ? "change-negative" : "change-notr";
+
+    // **Değişim değeri ve üçgen simgesi**
+    const changeText = document.createElement("span");
+    changeText.textContent = `${stock.rate}% `;
+
+    const changeIcon = document.createElement("span"); // Unicode üçgenler için span kullanıyoruz
+    changeIcon.style.marginLeft = "5px"; // Boşluk ekle
+
+    if (previousRate === null) {
+
+    } else if (currentRate > previousRate) {
+        changeIcon.className = " fa-solid fa-caret-up"; // **Yukarı üçgen**fa-solid fa-caret-up
+        changeIcon.style.color = "#00B38A";  
+    } else if (currentRate < previousRate) {
+        changeIcon.className = " fa-solid fa-caret-down"; // **Aşağı üçgen**
+        changeIcon.style.color = "#EA324C";
+    } else {
+      
+    }
+
+    changeCell.appendChild(changeText);
+    changeCell.appendChild(changeIcon);
+    row.appendChild(changeCell);
+
+    // **Hacim(TL) Hücresi**
+    const volumeTlCell = document.createElement("td");
+    volumeTlCell.textContent = `${stock.volume_tl} ₺`;
+    row.appendChild(volumeTlCell);
+
+    // **Hacim(Lot) Hücresi**
+    const volumeLotCell = document.createElement("td");
+    volumeLotCell.textContent = stock.volume_lot;
+    row.appendChild(volumeLotCell);
+
+    // **Silme Butonu**
+    const deleteButton = document.createElement("span");
+    deleteButton.textContent = "×";
+    deleteButton.className = "delete-button";
+    deleteButton.style.display = editMode ? "inline-block" : "none";
+    deleteButton.addEventListener("click", function(e) {
         e.stopPropagation();
         removeStock(stock.code);
-      });
-      row.appendChild(deleteButton);
+    });
+    row.appendChild(deleteButton);
 
-      // Drag Handle (görsel amaçlı; artık tüm satırdan da sürüklenebilir)
-      const dragHandle = document.createElement("span");
-      dragHandle.textContent = "⠿";
-      dragHandle.className = "drag-handle";
-      dragHandle.style.display = editMode ? "inline-block" : "none";
-      row.appendChild(dragHandle);
+    // **Drag Handle**
+    const dragHandle = document.createElement("span");
+    dragHandle.textContent = "⠿";
+    dragHandle.className = "drag-handle";
+    dragHandle.style.display = editMode ? "inline-block" : "none";
+    row.appendChild(dragHandle);
 
-      tableBody.appendChild(row);
-    }
+    tableBody.appendChild(row);
+
+    // **Yeni değişim oranını STORAGE_PREV_KEY içinde sakla**
+    previousRates[stock.code] = stock.rate;
+    localStorage.setItem(STORAGE_PREV_KEY, JSON.stringify(previousRates));
+}
+
 
     function removeStock(stockCode) {
-      let storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      storedStocks = storedStocks.filter(stock => stock.code !== stockCode);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStocks));
-      loadStocks();
-    }
+    let storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    
+    // Silinecek hisseyi çıkart
+    storedStocks = storedStocks.filter(stock => stock.code !== stockCode);
+
+    // Güncellenmiş listeyi localStorage'a kaydet
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStocks));
+
+    // Tabloyu güncelle
+    reloadStockTable(storedStocks);
+}
+
 
     // Drag Event Handler'ları (satırın herhangi bir yerinden başlatılabilir)
     function dragStartHandler(e) {
@@ -251,36 +479,91 @@
 
     // Yeni sıralamayı localStorage'e kaydeder
     function saveNewOrder() {
-      const tableBody = document.getElementById("portfolioBody");
-      const newOrderCodes = Array.from(tableBody.children).map(row => row.children[1].textContent);
-      let storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      storedStocks.sort((a, b) => newOrderCodes.indexOf(a.code) - newOrderCodes.indexOf(b.code));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStocks));
-    }
+    const tableBody = document.getElementById("portfolioBody");
+    const newOrderCodes = Array.from(tableBody.children).map(row => row.children[1].textContent);
+
+    let storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+    // Yeni sıralamayı eski verilerle eşleştir ve kaydet
+    storedStocks.sort((a, b) => newOrderCodes.indexOf(a.code) - newOrderCodes.indexOf(b.code));
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStocks));
+}
+
 
     async function addManualStock() {
-      const stockCode = document.getElementById("manualStockInput").value.toUpperCase();
-      if (!stockCode) {
+    const stockCode = document.getElementById("manualStockInput").value.toUpperCase();
+    if (!stockCode) {
         alert("Lütfen bir hisse kodu girin.");
         return;
-      }
-      const storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      const alreadyExists = storedStocks.some(stock => stock.code === stockCode);
-      if (alreadyExists) {
-        alert("Bu hisse zaten eklenmiş.");
-        return;
-      }
-      const response = await fetch(`/hisseler`);
-      const stocks = await response.json();
-      const stock = stocks.find(s => s.code === stockCode);
-      if (!stock) {
-        alert("Hisse bulunamadı.");
-        return;
-      }
-      storedStocks.push(stock);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStocks));
-      addStockToTable(stock);
     }
+
+    // Mevcut hisseleri çekiyoruz
+    let storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+    // Eğer hisse zaten eklenmişse, tekrar eklemeyi engelle
+    if (storedStocks.some(stock => stock.code === stockCode)) {
+        alert("Bu hisse zaten listenizde mevcut!");
+        return;
+    }
+
+    const response = await fetch(`/api/hisseler?hisse=${stockCode}`);
+    const stocks = await response.json();
+
+    if (stocks.length === 0) {
+        alert("Bu hisse koduna ait veri bulunamadı.");
+        return;
+    }
+
+    // Yeni hisseyi listeye ekleyip kaydediyoruz
+    storedStocks.push(stocks[0]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStocks));
+
+    // Hisseyi tabloya ekle
+    addStockToTable(stocks[0]);
+}
+
+async function updateStockPrices() {
+    if (editMode) return;  // Eğer düzenleme modu açıksa güncellemeyi durdur
+
+    let storedStocks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    if (storedStocks.length === 0) return;
+
+    const stockCodes = storedStocks.map(stock => stock.code);
+    const responses = await Promise.all(stockCodes.map(code => fetch(`/api/hisseler?hisse=${code}`)));
+
+    let updatedStocks = [];
+
+    for (let i = 0; i < responses.length; i++) {
+        const stockData = await responses[i].json();
+        if (stockData.length > 0) {
+            updatedStocks.push(stockData[0]);
+        }
+    }
+
+    if (updatedStocks.length > 0) {
+        // Kullanıcının belirlediği sıralamaya sadık kal
+        const sortedUpdatedStocks = stockCodes.map(code =>
+            updatedStocks.find(stock => stock.code === code)
+        ).filter(stock => stock !== undefined);  // Silinmişleri temizle
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sortedUpdatedStocks));
+        reloadStockTable(sortedUpdatedStocks);
+    }
+}
+
+
+
+// Tabloyu sıralamayı koruyarak güncelleyen fonksiyon
+function reloadStockTable(stocks) {
+    const tableBody = document.getElementById("portfolioBody");
+    tableBody.innerHTML = ""; // Mevcut tabloyu temizle
+    stocks.forEach(stock => addStockToTable(stock)); // Güncellenmiş verileri tekrar ekle
+}
+
+// 30 saniyede bir fiyatları güncelle
+setInterval(updateStockPrices, 10000);
+
 
     loadStocks();
   </script>
